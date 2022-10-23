@@ -7,10 +7,11 @@ type User =
     UserName: string;
     Location: string;
     BrickCount: int;
-    Collection: Piece[] }
+    Collection: Piece[] option }
 and Piece = 
   { PieceId: int;
     Variants: PieceVariant[] }
 and PieceVariant = 
   { Color: string; 
     Count: int }
+
