@@ -9,7 +9,7 @@ type User =
     BrickCount: int;
     Collection: Piece[] option }
 and Piece = 
-  { PieceId: int;
+  { PieceId: string;
     Variants: PieceVariant[] }
 and PieceVariant = 
   { Color: string; 
