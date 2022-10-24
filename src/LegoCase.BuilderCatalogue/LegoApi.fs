@@ -3,6 +3,7 @@ module LegoApi
 open System
 open FsHttp
 open System.Text.Json
+open FsToolkit.ErrorHandling
 open LegoSet
 open LegoUser
 
@@ -13,18 +14,26 @@ let private tryDeserialize<'a> (json : JsonElement) =
         Result.Ok(deserialize<'a> json)
     with
         | ex -> Result.Error($"Failed to deserialize JSON data, %s{ex.Message}\n Data: {json}") 
-
+let private trySendTAsync context =
+    try
+        TaskResult.ofTask (context |> Request.sendTAsync)
+    with
+        | ex -> TaskResult.error $"Failed to send http request, %s{ex.Message}" 
+    
 let private query<'a> url parameters (jsonMap : JsonElement -> JsonElement) rootUrl =
     task {
-        let! response = 
+        let apiUrl = $"%s{rootUrl}%s{url}"
+        let! response =
             http {
-                GET $"%s{rootUrl}%s{url}"
+                GET apiUrl
                 query parameters
             }
-            |> Request.sendTAsync
+            |> trySendTAsync
+
         return response
-            |> Response.expectStatusCode 200
-            |> Result.mapError (fun error -> $"Got http status code '%A{error.actual}' but was expecting '%A{error.expected |> List.toArray}'")
+            |> Result.bind (fun response ->
+                Response.expectStatusCode 200 response
+                |> Result.mapError (fun error -> $"Got http status code '%A{error.actual}' but was expecting '%A{error.expected |> List.toArray}' from %s{apiUrl}")) 
             |> Result.map Response.toJson
             |> Result.map jsonMap
             |> Result.bind tryDeserialize<'a>
