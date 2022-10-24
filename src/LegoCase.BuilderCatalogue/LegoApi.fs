@@ -6,15 +6,15 @@ open System.Text.Json
 open LegoSet
 open LegoUser
 
-let deserialize<'a> (json : JsonElement) =
+let private deserialize<'a> (json : JsonElement) =
     JsonSerializer.Deserialize<'a>(json, JsonSerializerOptions(JsonSerializerDefaults.Web))
-let tryDeserialize<'a> (json : JsonElement) =
+let private tryDeserialize<'a> (json : JsonElement) =
     try
         Result.Ok(deserialize<'a> json)
     with
         | ex -> Result.Error($"Failed to deserialize JSON data, %s{ex.Message}\n Data: {json}") 
 
-let query<'a> url parameters (jsonMap : JsonElement -> JsonElement) rootUrl =
+let private query<'a> url parameters (jsonMap : JsonElement -> JsonElement) rootUrl =
     task {
         let! response = 
             http {
@@ -31,9 +31,9 @@ let query<'a> url parameters (jsonMap : JsonElement -> JsonElement) rootUrl =
     }
 
 let Users = query<User[]> "/api/users" [] (fun json -> json?Users)
-let UserByUserName userName = query<User> $"/api/user/by-username/%s{userName}" [] id
-let User (userId : Guid) = query<User> $"/api/user/by-id/%A{userId}" [] id
+let UserByUserName rootUrl userName = query<User> $"/api/user/by-username/%s{userName}" [] id rootUrl 
+let User rootUrl (userId : Guid) = query<User> $"/api/user/by-id/%A{userId}" [] id rootUrl 
 let Sets = query<Set[]> "/api/sets" [] (fun json -> json?Sets)
-let SetByName name = query<Set> $"/api/set/by-name/%s{name}" [] id
-let Set (setId : Guid) = query<Set> $"/api/set/by-id/%A{setId}" [] id
+let SetByName rootUrl name  = query<Set> $"/api/set/by-name/%s{name}" [] id rootUrl
+let Set rootUrl (setId : Guid) = query<Set> $"/api/set/by-id/%A{setId}" [] id rootUrl
 

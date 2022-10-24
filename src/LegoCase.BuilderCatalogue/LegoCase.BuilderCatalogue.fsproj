@@ -8,12 +8,14 @@
   <ItemGroup>
     <Compile Include="LegoUser.fs" />
     <Compile Include="LegoSet.fs" />
+    <Compile Include="BuilderCatalogue.fs" />
     <Compile Include="LegoApi.fs" />
-    <Compile Include="Program.fs" />
+    <Compile Include="Main.fs" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="FsHttp" Version="9.1.2" />
+    <PackageReference Update="FSharp.Core" Version="6.0.6" />
   </ItemGroup>
 
 </Project>
