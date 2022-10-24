@@ -31,9 +31,9 @@ let query<'a> url parameters (jsonMap : JsonElement -> JsonElement) rootUrl =
     }
 
 let Users = query<User[]> "/api/users" [] (fun json -> json?Users)
-let UserByUserName userName = query<User> $"/api/user/by-username/%s{userName}" [] (fun json -> json)
-let User (userId : Guid) = query<User> $"/api/user/by-id/%A{userId}" [] (fun json -> json)
+let UserByUserName userName = query<User> $"/api/user/by-username/%s{userName}" [] id
+let User (userId : Guid) = query<User> $"/api/user/by-id/%A{userId}" [] id
 let Sets = query<Set[]> "/api/sets" [] (fun json -> json?Sets)
-let SetByName name = query<Set> $"/api/set/by-name/%s{name}" [] (fun json -> json)
-let Set (setId : Guid) = query<Set> $"/api/set/by-id/%A{setId}" [] (fun json -> json)
+let SetByName name = query<Set> $"/api/set/by-name/%s{name}" [] id
+let Set (setId : Guid) = query<Set> $"/api/set/by-id/%A{setId}" [] id
 

@@ -478,4 +478,4 @@ $RECYCLE.BIN/
 
 # JetBrains
 
-*/.idea
+*.idea
