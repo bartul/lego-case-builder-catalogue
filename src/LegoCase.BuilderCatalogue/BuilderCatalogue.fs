@@ -35,3 +35,7 @@ let canBuild (collection : LegoUser.Piece[]) (set : LegoSet.Piece[]) =
         |> Array.exists (fun item -> item.SetQuantity > item.UserQuantity)
         |> not
 
+let canBuildWithMatrix collection setPieces =
+    // TO DO: Implement
+    Threading.Thread.Sleep(1)
+    canBuild collection setPieces
